@@ -62,6 +62,7 @@ export abstract class BaseMongoRepository<E extends BaseEntity>
       page,
       limit,
       total,
+      results: data.length,
       data: data.map(this.toEntity.bind(this)),
     };
   }

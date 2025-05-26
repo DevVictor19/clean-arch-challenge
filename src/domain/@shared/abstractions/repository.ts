@@ -4,6 +4,7 @@ export interface PaginatedResult<E extends BaseEntity> {
   page: number;
   limit: number;
   total: number;
+  results: number;
   data: E[];
 }
 
