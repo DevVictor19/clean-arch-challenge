@@ -63,10 +63,27 @@ export class ClientController {
   }
 
   async findPaginated(
-    req: HttpRequest<{ page: string; limit: string }, null, null>
+    req: HttpRequest<null, { page: string; limit: string }, null>
   ): Promise<HttpResponse> {
-    const page = Number(req.params?.page);
-    const limit = Number(req.params?.limit);
+    let page: number = 1;
+    let limit: number = 10;
+
+    if (typeof req.query?.page === "string" && !isNaN(Number(req.query.page))) {
+      const parsed = Number(req.query.page);
+      if (Number.isInteger(parsed) && parsed > 0) {
+        page = parsed;
+      }
+    }
+
+    if (
+      typeof req.query?.limit === "string" &&
+      !isNaN(Number(req.query.limit))
+    ) {
+      const parsed = Number(req.query.limit);
+      if (Number.isInteger(parsed) && parsed > 0 && parsed < 100) {
+        limit = parsed;
+      }
+    }
 
     const result = await this.clientService.findPaginated(page, limit);
 
