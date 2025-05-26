@@ -2,6 +2,7 @@ import "dotenv/config";
 
 interface EnvConfigs {
   serverPort: number;
+  mongoURI: string;
 }
 
 let envConfigs: EnvConfigs;
@@ -9,6 +10,7 @@ let envConfigs: EnvConfigs;
 export function loadEnv() {
   envConfigs = {
     serverPort: getNumber("SERVER_PORT", 3000),
+    mongoURI: getString("MONGO_URL", "mongodb://admin:admin@mongo:27017"),
   };
 }
 
