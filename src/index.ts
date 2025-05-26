@@ -1,10 +1,12 @@
 import http from "node:http";
 import { app } from "./app";
 import { getEnv, loadEnv } from "./infra/env/env-config";
+import { connectDB } from "./infra/mongo/connection";
 
-function start() {
+async function start() {
   try {
     loadEnv();
+    await connectDB();
 
     const server = http.createServer(app);
 
