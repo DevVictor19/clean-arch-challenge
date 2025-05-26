@@ -6,23 +6,32 @@ import { MongoClientRepository } from "./infra/mongo/repositories/client";
 import { ClientController } from "./domain/clients/controller";
 import { createClientRouter } from "./infra/routers/client";
 import { globalErrorMiddleware } from "./infra/middlewares/error";
+import { RedisCacheService } from "./infra/redis/cache";
 
-export const app = express();
-const router = express.Router();
+export function mount() {
+  const app = express();
+  const router = express.Router();
 
-const mongoClientRepository = new MongoClientRepository();
-const clientService = new ClientService(mongoClientRepository);
-const clientController = new ClientController(clientService);
-const clientRouter = createClientRouter(clientController);
+  const redisCacheService = new RedisCacheService();
+  const mongoClientRepository = new MongoClientRepository();
+  const clientService = new ClientService(
+    mongoClientRepository,
+    redisCacheService
+  );
+  const clientController = new ClientController(clientService);
+  const clientRouter = createClientRouter(clientController);
 
-app.use(morgan("common"));
-app.use(express.json());
-app.use("/v1", router);
+  app.use(morgan("common"));
+  app.use(express.json());
+  app.use("/v1", router);
 
-router.get("/health", (req: Request, res: Response) => {
-  res.send({ message: "ok" });
-});
+  router.get("/health", (req: Request, res: Response) => {
+    res.send({ message: "ok" });
+  });
 
-router.use("/clients", clientRouter);
+  router.use("/clients", clientRouter);
 
-app.use(globalErrorMiddleware);
+  app.use(globalErrorMiddleware);
+
+  return app;
+}
