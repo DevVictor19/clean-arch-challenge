@@ -1,3 +1,4 @@
+import { CacheService } from "../@shared/abstractions/services/cache";
 import {
   BadRequestHttpError,
   ConflictHttpError,
@@ -9,7 +10,10 @@ import { Client } from "./entity";
 import { ClientRepository } from "./repository";
 
 export class ClientService {
-  constructor(private readonly clientRepository: ClientRepository) {}
+  constructor(
+    private readonly clientRepository: ClientRepository,
+    private readonly cacheService: CacheService
+  ) {}
 
   async create(dto: CreateClientDTO) {
     const [withSameEmail, withSamePhone] = await Promise.all([
@@ -84,11 +88,20 @@ export class ClientService {
   }
 
   async findById(id: string) {
+    const cached = await this.cacheService.get<Client>(`client:${id}`);
+
+    if (cached) {
+      console.log(`findById hitting cache for id:${id}`);
+      return cached;
+    }
+
     const client = await this.clientRepository.findById(id);
 
     if (!client) {
       throw new NotFoundHttpError("Cliente não encontrado");
     }
+
+    await this.cacheService.set(`client:${id}`, client, 30);
 
     return client;
   }
