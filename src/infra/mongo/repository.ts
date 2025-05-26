@@ -18,13 +18,19 @@ export abstract class BaseMongoRepository<E extends BaseEntity>
 {
   constructor(protected model: Model<E>) {}
 
+  protected abstract toEntity(data: any): E;
+
   async save(model: E): Promise<E> {
     const m = new this.model(model);
-    return m.save();
+    const saved = await m.save();
+    return this.toEntity(saved);
   }
 
   async update(id: string, model: Partial<E>): Promise<E | null> {
-    return this.model.findByIdAndUpdate(id, model, { new: true }).exec();
+    const updated = await this.model
+      .findByIdAndUpdate(id, model, { new: true })
+      .exec();
+    return updated ? this.toEntity(updated) : null;
   }
 
   async delete(id: string): Promise<void> {
@@ -32,11 +38,13 @@ export abstract class BaseMongoRepository<E extends BaseEntity>
   }
 
   async findById(id: string): Promise<E | null> {
-    return this.model.findById(id).exec();
+    const found = await this.model.findById(id).exec();
+    return found ? this.toEntity(found) : null;
   }
 
   async findAll(): Promise<E[]> {
-    return this.model.find().exec();
+    const results = await this.model.find().exec();
+    return results.map(this.toEntity.bind(this));
   }
 
   async findPaginated(
@@ -54,7 +62,7 @@ export abstract class BaseMongoRepository<E extends BaseEntity>
       page,
       limit,
       total,
-      data,
+      data: data.map(this.toEntity.bind(this)),
     };
   }
 }
