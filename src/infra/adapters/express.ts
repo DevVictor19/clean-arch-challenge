@@ -8,8 +8,6 @@ import {
  * Transforma Express.Request em HttpRequest
  */
 export function adaptExpressRequest(req: Request): HttpRequest<any, any, any> {
-  console.log(req.body);
-
   return {
     params: req.params,
     query: req.query,
