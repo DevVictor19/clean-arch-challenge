@@ -4,9 +4,9 @@ import { getEnv } from "../env/env-config";
 export async function connectDB(): Promise<void> {
   try {
     console.log("Attempting connection to mongoDB...");
-    await mongoose.connect(getEnv().mongoURI, {
+    await mongoose.connect(getEnv().mongo.uri, {
       autoIndex: true,
-      dbName: getEnv().dbName,
+      dbName: getEnv().mongo.dbName,
     });
     console.log("MongoDB connected!");
   } catch (error) {

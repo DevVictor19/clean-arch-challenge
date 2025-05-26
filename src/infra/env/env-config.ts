@@ -2,7 +2,11 @@ import "dotenv/config";
 
 interface EnvConfigs {
   serverPort: number;
-  mongoURI: string;
+  mongo: MongoConfigs;
+}
+
+interface MongoConfigs {
+  uri: string;
   dbName: string;
 }
 
@@ -11,8 +15,10 @@ let envConfigs: EnvConfigs;
 export function loadEnv() {
   envConfigs = {
     serverPort: getNumber("SERVER_PORT", 3000),
-    mongoURI: getString("MONGO_URL", "mongodb://admin:admin@mongo:27017"),
-    dbName: getString("DB_NAME", "clients-api"),
+    mongo: {
+      uri: getString("MONGO_URL", "mongodb://admin:admin@mongo:27017"),
+      dbName: getString("MONGO_DATABASE", "clients-api"),
+    },
   };
 }
 
