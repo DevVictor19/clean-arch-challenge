@@ -1,11 +1,11 @@
 import { randomUUID } from "node:crypto";
 import { Model, Schema } from "mongoose";
 
-import { BaseEntity } from "../../domain/@shared/abstractions/entity";
+import { BaseEntity } from "../../../domain/@shared/abstractions/entity";
 import {
   BaseRepository,
   PaginatedResult,
-} from "../../domain/@shared/abstractions/repository";
+} from "../../../domain/@shared/abstractions/repository";
 
 export const BaseSchema: Schema<BaseEntity> = new Schema({
   _id: { type: String, default: () => randomUUID() },

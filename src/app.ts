@@ -2,7 +2,7 @@ import morgan from "morgan";
 import express, { Request, Response } from "express";
 
 import { ClientService } from "./domain/clients/service";
-import { MongoClientRepository } from "./infra/mongo/client";
+import { MongoClientRepository } from "./infra/mongo/repositories/client";
 import { ClientController } from "./domain/clients/controller";
 import { createClientRouter } from "./infra/routers/client";
 import { globalErrorMiddleware } from "./infra/middlewares/error";

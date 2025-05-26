@@ -1,8 +1,8 @@
 import { model, Schema } from "mongoose";
 import { randomUUID } from "node:crypto";
 
-import { Client } from "../../domain/clients/entity";
-import { ClientRepository } from "../../domain/clients/repository";
+import { Client } from "../../../domain/clients/entity";
+import { ClientRepository } from "../../../domain/clients/repository";
 import { BaseMongoRepository } from "./repository";
 
 const ClientSchema: Schema = new Schema<Client>({
