@@ -25,10 +25,23 @@ export class MongoClientRepository
   }
 
   async findByEmail(email: string): Promise<Client | null> {
-    return this.model.findOne({ email });
+    const found = await this.model.findOne({ email });
+    return found ? this.toEntity(found) : null;
   }
 
   async findByPhone(phone: string): Promise<Client | null> {
-    return this.model.findOne({ phone });
+    const found = await this.model.findOne({ phone });
+    return found ? this.toEntity(found) : null;
+  }
+
+  protected toEntity(data: any): Client {
+    return new Client({
+      _id: data._id,
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      created_at: data.created_at,
+      updated_at: data.updated_at,
+    });
   }
 }
