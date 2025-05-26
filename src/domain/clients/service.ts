@@ -2,6 +2,7 @@ import {
   BadRequestHttpError,
   ConflictHttpError,
   NotFoundHttpError,
+  ValidationError,
 } from "../@shared/errors/http";
 import { CreateClientDTO, UpdateClientDTO } from "./dtos";
 import { Client } from "./entity";
@@ -29,6 +30,15 @@ export class ClientService {
       name: dto.name,
       phone: dto.phone,
     });
+
+    const validation = model.validate();
+
+    if (!validation.valid) {
+      throw new ValidationError(
+        "Dados de cliente inválidos",
+        validation.errors
+      );
+    }
 
     return this.clientRepository.save(model);
   }
@@ -60,6 +70,15 @@ export class ClientService {
     client.email = dto.email;
     client.name = dto.name;
     client.phone = dto.phone;
+
+    const validation = client.validate();
+
+    if (!validation.valid) {
+      throw new ValidationError(
+        "Dados de cliente inválidos",
+        validation.errors
+      );
+    }
 
     return this.clientRepository.update(id, client);
   }
