@@ -5,6 +5,7 @@ services:
     ports:
       - "3000:3000"
     environment:
+      - TZ=America/Sao_Paulo
       - NODE_ENV=production
     env_file:
       - .env
