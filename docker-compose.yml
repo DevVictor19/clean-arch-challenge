@@ -14,6 +14,7 @@ services:
       - backend
     depends_on:
       - mongo
+      - redis
 
   mongo:
     image: mongo:7
@@ -29,9 +30,22 @@ services:
     networks:
       - backend
 
+  redis:
+    image: redis:8
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: ["redis-server", "--appendonly", "yes"]
+    restart: always
+    networks:
+      - backend
+
 networks:
   backend:
     driver: bridge
 
 volumes:
   mongo_data:
+  redis-data:
