@@ -1,4 +1,5 @@
 import { HttpRequest, HttpResponse } from "../@shared/abstractions/http";
+import { BadRequestHttpError } from "../@shared/errors/http";
 import { CreateClientDTO, UpdateClientDTO } from "./dtos";
 import { ClientService } from "./service";
 
@@ -9,6 +10,10 @@ export class ClientController {
     req: HttpRequest<null, null, CreateClientDTO>
   ): Promise<HttpResponse> {
     const dto = req.body;
+
+    if (!dto) {
+      throw new BadRequestHttpError("Insira o corpo da requisição");
+    }
 
     const result = await this.clientService.create(dto);
 
@@ -21,8 +26,16 @@ export class ClientController {
   async update(
     req: HttpRequest<{ id: string }, null, UpdateClientDTO>
   ): Promise<HttpResponse> {
-    const id = req.params.id;
+    const id = req.params?.id;
     const dto = req.body;
+
+    if (!id) {
+      throw new BadRequestHttpError("Parametro id é obrigatório");
+    }
+
+    if (!dto) {
+      throw new BadRequestHttpError("Insira o corpo da requisição");
+    }
 
     const result = await this.clientService.update(id, dto);
 
@@ -35,7 +48,11 @@ export class ClientController {
   async findById(
     req: HttpRequest<{ id: string }, null, null>
   ): Promise<HttpResponse> {
-    const id = req.params.id;
+    const id = req.params?.id;
+
+    if (!id) {
+      throw new BadRequestHttpError("Parametro id é obrigatório");
+    }
 
     const result = await this.clientService.findById(id);
 
@@ -48,8 +65,8 @@ export class ClientController {
   async findPaginated(
     req: HttpRequest<{ page: string; limit: string }, null, null>
   ): Promise<HttpResponse> {
-    const page = Number(req.params.page);
-    const limit = Number(req.params.limit);
+    const page = Number(req.params?.page);
+    const limit = Number(req.params?.limit);
 
     const result = await this.clientService.findPaginated(page, limit);
 
@@ -62,7 +79,11 @@ export class ClientController {
   async delete(
     req: HttpRequest<{ id: string }, null, null>
   ): Promise<HttpResponse> {
-    const id = req.params.id;
+    const id = req.params?.id;
+
+    if (!id) {
+      throw new BadRequestHttpError("Parametro id é obrigatório");
+    }
 
     await this.clientService.delete(id);
 

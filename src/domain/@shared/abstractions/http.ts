@@ -1,8 +1,8 @@
 export interface HttpRequest<Params = {}, Query = {}, Body = {}> {
-  params: Params;
-  query: Query;
-  body: Body;
-  headers: Record<string, string>;
+  params?: Partial<Params>;
+  query?: Partial<Query>;
+  body?: Body;
+  headers?: Partial<Record<string, string>>;
 }
 
 export interface HttpResponse<T = any> {
