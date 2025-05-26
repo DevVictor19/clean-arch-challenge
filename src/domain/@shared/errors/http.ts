@@ -1,52 +1,52 @@
 export interface HttpError {
   message: string;
   code: number;
+  errors?: Record<string, string>;
 }
 
-export class BadRequestHttpError extends Error implements HttpError {
+export abstract class ApiHttpError extends Error implements HttpError {
   code: number;
+  errors: Record<string, string> | undefined;
 
-  constructor(message: string) {
+  protected constructor(message: string, code: number, name: string) {
     super(message);
-    this.name = "BadRequestHttpError";
-    this.code = 400;
+    this.name = name;
+    this.code = code;
 
-    Object.setPrototypeOf(this, BadRequestHttpError.prototype);
+    Object.setPrototypeOf(this, new.target.prototype);
   }
 }
 
-export class UnprocessableEntityHttpError extends Error implements HttpError {
-  code: number;
+export class BadRequestHttpError extends ApiHttpError {
+  constructor(message: string = "Bad Request") {
+    super(message, 400, "BadRequestHttpError");
+  }
+}
 
+export class UnprocessableEntityHttpError extends ApiHttpError {
   constructor(message: string = "Unprocessable Entity") {
-    super(message);
-    this.name = "UnprocessableEntityHttpError";
-    this.code = 422;
-
-    Object.setPrototypeOf(this, UnprocessableEntityHttpError.prototype);
+    super(message, 422, "UnprocessableEntityHttpError");
   }
 }
 
-export class NotFoundHttpError extends Error implements HttpError {
-  code: number;
-
+export class NotFoundHttpError extends ApiHttpError {
   constructor(message: string = "Resource not found") {
-    super(message);
-    this.name = "NotFoundHttpError";
-    this.code = 404;
-
-    Object.setPrototypeOf(this, NotFoundHttpError.prototype);
+    super(message, 404, "NotFoundHttpError");
   }
 }
 
-export class ConflictHttpError extends Error implements HttpError {
-  code: number;
-
+export class ConflictHttpError extends ApiHttpError {
   constructor(message: string = "Conflict") {
-    super(message);
-    this.name = "ConflictHttpError";
-    this.code = 409;
+    super(message, 409, "ConflictHttpError");
+  }
+}
 
-    Object.setPrototypeOf(this, ConflictHttpError.prototype);
+export class ValidationError extends ApiHttpError {
+  constructor(
+    message: string = "Validate Error",
+    errors?: Record<string, string>
+  ) {
+    super(message, 422, "UnprocessableEntityHttpError");
+    this.errors = errors;
   }
 }
