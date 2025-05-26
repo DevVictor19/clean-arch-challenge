@@ -6,6 +6,11 @@ export type BaseEntityProps = {
   created_at?: Date;
 };
 
+export type ValidateError = {
+  valid: boolean;
+  errors?: Record<string, string>;
+};
+
 export abstract class BaseEntity {
   _id: string;
   updated_at: Date;
@@ -16,4 +21,6 @@ export abstract class BaseEntity {
     this.updated_at = props.updated_at ?? new Date();
     this.created_at = props.created_at ?? new Date();
   }
+
+  abstract validate(): ValidateError;
 }
