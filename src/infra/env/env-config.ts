@@ -3,11 +3,16 @@ import "dotenv/config";
 interface EnvConfigs {
   serverPort: number;
   mongo: MongoConfigs;
+  redis: RedisConfigs;
 }
 
 interface MongoConfigs {
   uri: string;
   dbName: string;
+}
+
+interface RedisConfigs {
+  url: string;
 }
 
 let envConfigs: EnvConfigs;
@@ -18,6 +23,9 @@ export function loadEnv() {
     mongo: {
       uri: getString("MONGO_URL", "mongodb://admin:admin@mongo:27017"),
       dbName: getString("MONGO_DATABASE", "clients-api"),
+    },
+    redis: {
+      url: getString("REDIS_URL", "redis://redis:6379"),
     },
   };
 }
