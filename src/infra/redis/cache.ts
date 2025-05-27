@@ -1,8 +1,8 @@
 import { RedisClientType } from "redis";
-import { CacheService } from "../../domain/@shared/abstractions/services/cache";
+import { Cache } from "../../domain/@shared/abstractions/cache";
 import { getRedisClient } from "./connection";
 
-export class RedisCacheService implements CacheService {
+export class RedisCache implements Cache {
   private client: RedisClientType;
 
   constructor() {

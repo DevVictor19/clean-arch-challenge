@@ -6,16 +6,16 @@ import { MongoClientRepository } from "./infra/mongo/repositories/client";
 import { ClientController } from "./domain/clients/controller";
 import { createClientRouter } from "./infra/routers/client";
 import { globalErrorMiddleware } from "./infra/middlewares/error";
-import { RedisCacheService } from "./infra/redis/cache";
+import { RedisCache } from "./infra/redis/cache";
 import { ClientCacheService } from "./domain/clients/cache";
 
 export function mount() {
   const app = express();
   const router = express.Router();
 
-  const redisCacheService = new RedisCacheService();
+  const redisCache = new RedisCache();
   const mongoClientRepository = new MongoClientRepository();
-  const clientCacheService = new ClientCacheService(redisCacheService);
+  const clientCacheService = new ClientCacheService(redisCache);
   const clientService = new ClientService(
     mongoClientRepository,
     clientCacheService
