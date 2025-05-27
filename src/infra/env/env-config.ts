@@ -4,6 +4,7 @@ interface EnvConfigs {
   serverPort: number;
   mongo: MongoConfigs;
   redis: RedisConfigs;
+  rabbitmq: RabbitmqConfigs;
 }
 
 interface MongoConfigs {
@@ -12,6 +13,10 @@ interface MongoConfigs {
 }
 
 interface RedisConfigs {
+  url: string;
+}
+
+interface RabbitmqConfigs {
   url: string;
 }
 
@@ -26,6 +31,9 @@ export function loadEnv() {
     },
     redis: {
       url: getString("REDIS_URL", "redis://redis:6379"),
+    },
+    rabbitmq: {
+      url: getString("RABBITMQ_URL", "amqp://admin:admin@rabbitmq:5672"),
     },
   };
 }

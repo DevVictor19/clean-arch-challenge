@@ -3,6 +3,10 @@ import { getEnv, loadEnv } from "./infra/env/env-config";
 import { connectDB } from "./infra/mongo/connection";
 import { mount } from "./app";
 import { connectRedis, disconnectRedis } from "./infra/redis/connection";
+import {
+  connectRabbitMQ,
+  disconnectRabbitMQ,
+} from "./infra/rabbitmq/connection";
 
 let server: http.Server;
 
@@ -11,6 +15,7 @@ async function start() {
     loadEnv();
     await connectDB();
     await connectRedis();
+    await connectRabbitMQ();
 
     const app = mount();
     server = http.createServer(app);
@@ -31,6 +36,9 @@ async function shutdown() {
 
   disconnectRedis();
   console.log("Redis client disconnected.");
+
+  disconnectRabbitMQ();
+  console.log("RabbitMQ disconnected.");
 
   if (server) {
     server.close(() => {
