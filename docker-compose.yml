@@ -42,6 +42,22 @@ services:
     networks:
       - backend
 
+  rabbitmq:
+    image: rabbitmq:4.1
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+    volumes:
+      - rabbitmq-lib:/var/lib/rabbitmq/
+      - rabbitmq-log:/var/log/rabbitmq
+    networks:
+      - backend
+
 networks:
   backend:
     driver: bridge
@@ -49,3 +65,5 @@ networks:
 volumes:
   mongo_data:
   redis-data:
+  rabbitmq-lib:
+  rabbitmq-log:
