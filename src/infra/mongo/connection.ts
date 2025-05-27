@@ -8,7 +8,7 @@ export async function connectDB(): Promise<void> {
       autoIndex: true,
       dbName: getEnv().mongo.dbName,
     });
-    console.log("MongoDB connected!");
+    console.log("MongoDB connected...");
   } catch (error) {
     console.error("MongoDB connection error:", error);
   }
