@@ -34,7 +34,6 @@ export class RabbitMQueue implements Queue {
       console.log(`Consuming messages from queue "${queue}"`);
     } catch (error) {
       console.error("consume error: ", error);
-      throw error;
     }
   }
 }
