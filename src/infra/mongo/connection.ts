@@ -14,6 +14,10 @@ export async function connectDB(): Promise<void> {
   }
 }
 
+export async function disconnectDB() {
+  await mongoose.connection.close();
+}
+
 mongoose.connection.on("disconnected", () => {
   console.warn("MongoDB disconnected! Retrying connection...");
   setTimeout(() => connectDB(), 5000);

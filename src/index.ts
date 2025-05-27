@@ -1,6 +1,6 @@
 import http from "node:http";
 import { getEnv, loadEnv } from "./infra/env/env-config";
-import { connectDB } from "./infra/mongo/connection";
+import { connectDB, disconnectDB } from "./infra/mongo/connection";
 import { mount } from "./app";
 import { connectRedis, disconnectRedis } from "./infra/redis/connection";
 import {
@@ -33,6 +33,9 @@ start();
 
 async function shutdown() {
   console.log("Shutting down gracefully...");
+
+  disconnectDB();
+  console.log("MongoDB disconnected.");
 
   disconnectRedis();
   console.log("Redis client disconnected.");
