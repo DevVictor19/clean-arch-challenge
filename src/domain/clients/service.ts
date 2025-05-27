@@ -1,10 +1,10 @@
-import { CacheService } from "../@shared/abstractions/services/cache";
 import {
   BadRequestHttpError,
   ConflictHttpError,
   NotFoundHttpError,
   ValidationError,
 } from "../@shared/errors/http";
+import { ClientCacheService } from "./cache";
 import { CreateClientDTO, UpdateClientDTO } from "./dtos";
 import { Client } from "./entity";
 import { ClientRepository } from "./repository";
@@ -12,13 +12,13 @@ import { ClientRepository } from "./repository";
 export class ClientService {
   constructor(
     private readonly clientRepository: ClientRepository,
-    private readonly cacheService: CacheService
+    private readonly clientCacheService: ClientCacheService
   ) {}
 
   async create(dto: CreateClientDTO) {
     const [withSameEmail, withSamePhone] = await Promise.all([
-      this.clientRepository.findByEmail(dto.email),
-      this.clientRepository.findByPhone(dto.phone),
+      this.findByEmailWithCache(dto.email),
+      this.findByPhoneWithCache(dto.phone),
     ]);
 
     if (withSameEmail) {
@@ -48,15 +48,15 @@ export class ClientService {
   }
 
   async update(id: string, dto: UpdateClientDTO) {
-    const client = await this.clientRepository.findById(id);
+    const client = await this.findByIdWithCache(id);
 
     if (!client) {
       throw new NotFoundHttpError("Cliente não encontrado");
     }
 
     const [withSameEmail, withSamePhone] = await Promise.all([
-      this.clientRepository.findByEmail(dto.email),
-      this.clientRepository.findByPhone(dto.phone),
+      this.findByEmailWithCache(dto.email),
+      this.findByPhoneWithCache(dto.phone),
     ]);
 
     if (withSameEmail && withSameEmail._id !== client._id) {
@@ -88,20 +88,62 @@ export class ClientService {
   }
 
   async findById(id: string) {
-    const cached = await this.cacheService.get<Client>(`client:${id}`);
-
-    if (cached) {
-      console.log(`findById hitting cache for id:${id}`);
-      return cached;
-    }
-
-    const client = await this.clientRepository.findById(id);
+    const client = await this.findByIdWithCache(id);
 
     if (!client) {
       throw new NotFoundHttpError("Cliente não encontrado");
     }
 
-    await this.cacheService.set(`client:${id}`, client, 30);
+    return client;
+  }
+
+  async findByIdWithCache(id: string) {
+    const cached = await this.clientCacheService.getById(id);
+
+    if (cached) {
+      console.log(`findByIdWithCache hitting cache for id:${id}`);
+      return cached;
+    }
+
+    const client = await this.clientRepository.findById(id);
+
+    if (client) {
+      await this.clientCacheService.setById(id, client);
+    }
+
+    return client;
+  }
+
+  async findByEmailWithCache(email: string) {
+    const cached = await this.clientCacheService.getByEmail(email);
+
+    if (cached) {
+      console.log(`findByEmailWithCache hitting cache for email:${email}`);
+      return cached;
+    }
+
+    const client = await this.clientRepository.findByEmail(email);
+
+    if (client) {
+      await this.clientCacheService.setByEmail(email, client);
+    }
+
+    return client;
+  }
+
+  async findByPhoneWithCache(phone: string) {
+    const cached = await this.clientCacheService.getByPhone(phone);
+
+    if (cached) {
+      console.log(`findByPhoneWithCache hitting cache for phone:${phone}`);
+      return cached;
+    }
+
+    const client = await this.clientRepository.findByPhone(phone);
+
+    if (client) {
+      await this.clientCacheService.setByPhone(phone, client);
+    }
 
     return client;
   }

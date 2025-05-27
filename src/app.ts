@@ -7,6 +7,7 @@ import { ClientController } from "./domain/clients/controller";
 import { createClientRouter } from "./infra/routers/client";
 import { globalErrorMiddleware } from "./infra/middlewares/error";
 import { RedisCacheService } from "./infra/redis/cache";
+import { ClientCacheService } from "./domain/clients/cache";
 
 export function mount() {
   const app = express();
@@ -14,9 +15,10 @@ export function mount() {
 
   const redisCacheService = new RedisCacheService();
   const mongoClientRepository = new MongoClientRepository();
+  const clientCacheService = new ClientCacheService(redisCacheService);
   const clientService = new ClientService(
     mongoClientRepository,
-    redisCacheService
+    clientCacheService
   );
   const clientController = new ClientController(clientService);
   const clientRouter = createClientRouter(clientController);
