@@ -1,16 +1,16 @@
 import { describe, it, expect, vi, beforeEach, Mock } from "vitest";
-import { PaginatedResult } from "../../@shared/abstractions/repository";
+import { PaginatedResult } from "../../../@shared/abstractions/repository";
 import {
   ConflictHttpError,
   ValidationError,
   NotFoundHttpError,
   BadRequestHttpError,
-} from "../../@shared/errors/http";
-import { ClientCacheService } from "../cache";
-import { CreateClientDTO, UpdateClientDTO } from "../dtos";
-import { Client } from "../entity";
-import { ClientRepository } from "../repository";
-import { ClientService } from "../service";
+} from "../../../@shared/errors/http";
+import { ClientCacheService } from "../../cache";
+import { CreateClientDTO, UpdateClientDTO } from "../../dtos";
+import { Client } from "../../entity";
+import { ClientRepository } from "../../repository";
+import { ClientService } from "../../service";
 
 // Mock dependencies
 const mockClientRepository = {

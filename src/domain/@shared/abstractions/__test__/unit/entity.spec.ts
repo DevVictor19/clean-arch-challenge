@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { BaseEntity, ValidateError } from "../entity";
+import { BaseEntity, ValidateError } from "../../entity";
 
 class TestEntity extends BaseEntity {
   validate(): ValidateError {

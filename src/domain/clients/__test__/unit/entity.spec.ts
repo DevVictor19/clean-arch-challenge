@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { Client } from "../entity";
+import { Client } from "../../entity";
 
 describe("ClientEntity", () => {
   it("should validate a valid client", () => {

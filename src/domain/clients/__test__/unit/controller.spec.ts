@@ -1,12 +1,12 @@
 import { describe, it, expect, vi, beforeEach, Mock } from "vitest";
-import { PaginatedResult } from "../../@shared/abstractions/repository";
-import { BadRequestHttpError } from "../../@shared/errors/http";
-import { ClientController } from "../controller";
-import { CreateClientDTO, UpdateClientDTO } from "../dtos";
-import { Client } from "../entity";
-import { ClientQueueService } from "../queue";
-import { ClientService } from "../service";
-import { HttpRequest } from "../../@shared/abstractions/http";
+import { PaginatedResult } from "../../../@shared/abstractions/repository";
+import { BadRequestHttpError } from "../../../@shared/errors/http";
+import { ClientController } from "../../controller";
+import { CreateClientDTO, UpdateClientDTO } from "../../dtos";
+import { Client } from "../../entity";
+import { ClientQueueService } from "../../queue";
+import { ClientService } from "../../service";
+import { HttpRequest } from "../../../@shared/abstractions/http";
 
 // Mock dependencies
 const mockClientService = {
@@ -22,7 +22,7 @@ const mockClientQueueService = {
 } as unknown as ClientQueueService;
 
 // Mock Client class
-vi.mock("../client", () => {
+vi.mock("../../entity", () => {
   return {
     Client: vi.fn().mockImplementation((data) => ({
       _id: data._id || "client-id",
