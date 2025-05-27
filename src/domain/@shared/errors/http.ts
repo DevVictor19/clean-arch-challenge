@@ -52,7 +52,7 @@ export class ValidationError extends ApiHttpError {
     message: string = "Validate Error",
     errors?: Record<string, string>
   ) {
-    super(message, 422, "UnprocessableEntityHttpError");
+    super(message, 422, "ValidationError");
     this.errors = errors;
   }
 }
