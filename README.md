@@ -73,6 +73,12 @@ pnpm install
 pnpm run test
 ```
 
+3. Ou para rodar testes de corbetura
+
+```
+pnpm run test:cov
+```
+
 **Eu optei pelo pnpm como gerenciador de pacotes, mas você pode fazer tudo usando o npm, é só substituir pnpm por npm quando for rodar os comandos**
 
 **Se optar por seguir com o pnpm é so instalar rodando:**
