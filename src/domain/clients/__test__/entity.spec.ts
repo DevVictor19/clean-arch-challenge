@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { Client } from "../entity";
 
-describe("Client entity validation", () => {
+describe("ClientEntity", () => {
   it("should validate a valid client", () => {
     const client = new Client({
       name: "João Silva",
