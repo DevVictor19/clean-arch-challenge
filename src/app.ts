@@ -8,19 +8,27 @@ import { createClientRouter } from "./infra/routers/client";
 import { globalErrorMiddleware } from "./infra/middlewares/error";
 import { RedisCache } from "./infra/redis/cache";
 import { ClientCacheService } from "./domain/clients/cache";
+import { RabbitMQueue } from "./infra/rabbitmq/queue";
+import { ClientQueueService } from "./domain/clients/queue";
 
 export function mount() {
   const app = express();
   const router = express.Router();
 
   const redisCache = new RedisCache();
+  const rabbitMQueue = new RabbitMQueue();
+
   const mongoClientRepository = new MongoClientRepository();
+  const clientQueueService = new ClientQueueService(rabbitMQueue);
   const clientCacheService = new ClientCacheService(redisCache);
   const clientService = new ClientService(
     mongoClientRepository,
     clientCacheService
   );
-  const clientController = new ClientController(clientService);
+  const clientController = new ClientController(
+    clientService,
+    clientQueueService
+  );
   const clientRouter = createClientRouter(clientController);
 
   app.use(morgan("common"));

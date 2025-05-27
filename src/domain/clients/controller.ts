@@ -1,10 +1,14 @@
 import { HttpRequest, HttpResponse } from "../@shared/abstractions/http";
 import { BadRequestHttpError } from "../@shared/errors/http";
 import { CreateClientDTO, UpdateClientDTO } from "./dtos";
+import { ClientQueueService } from "./queue";
 import { ClientService } from "./service";
 
 export class ClientController {
-  constructor(private readonly clientService: ClientService) {}
+  constructor(
+    private readonly clientService: ClientService,
+    private readonly clientQueueService: ClientQueueService
+  ) {}
 
   async create(
     req: HttpRequest<null, null, CreateClientDTO>
@@ -16,6 +20,8 @@ export class ClientController {
     }
 
     const result = await this.clientService.create(dto);
+
+    await this.clientQueueService.sendWelcomeEmail(result);
 
     return {
       status: 201,
