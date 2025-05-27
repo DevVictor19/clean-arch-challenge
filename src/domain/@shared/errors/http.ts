@@ -41,6 +41,12 @@ export class ConflictHttpError extends ApiHttpError {
   }
 }
 
+export class InternalServerHttpError extends ApiHttpError {
+  constructor(message: string = "Internal Server Error") {
+    super(message, 500, "InternalServerHttpError");
+  }
+}
+
 export class ValidationError extends ApiHttpError {
   constructor(
     message: string = "Validate Error",
