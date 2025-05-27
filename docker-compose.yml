@@ -15,6 +15,7 @@ services:
     depends_on:
       - mongo
       - redis
+      - rabbitmq
 
   mongo:
     image: mongo:7
